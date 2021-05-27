@@ -55,6 +55,7 @@ public class ToolBarOption {
 	public boolean sendDocumentLinkOption;
 	public boolean sendDocumentAttachmentOption;
 	public boolean mailForwardOption;
+	public boolean writeMailOption;
 	public boolean moveOption;
 	public boolean exportOption;
 	public boolean workflowOption;
@@ -104,6 +105,7 @@ public class ToolBarOption {
 		sendDocumentLinkOption = false;
 		sendDocumentAttachmentOption = false;
 		mailForwardOption = false;
+		writeMailOption = false;
 		moveOption = false;
 		exportOption = false;
 		workflowOption = false;

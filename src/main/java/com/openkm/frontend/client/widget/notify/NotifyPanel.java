@@ -21,6 +21,9 @@
 
 package com.openkm.frontend.client.widget.notify;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -58,14 +61,16 @@ public class NotifyPanel extends Composite {
 	private VerticalPanel vNotifyExternalUserPanel;
 	private TextBox externalMailAddress;
 	private HTML externalUserHTML;
-
+	public List<String> users = null;
+    public List<String> roles = null;
+    
 	/**
 	 * NotifyPanel
 	 */
-	public NotifyPanel() {
+	public NotifyPanel(final NotifyHandler notifyChange) {
 		vPanel = new VerticalPanel();
-		notifyUser = new NotifyUser();
-		notifyRole = new NotifyRole();
+		notifyUser = new NotifyUser(notifyChange);
+		notifyRole = new NotifyRole(notifyChange);
 		tabPanel = new TabLayoutPanel(TAB_HEIGHT, Unit.PX);
 
 		tabPanel.add(notifyUser, Main.i18n("fileupload.label.users"));
@@ -99,19 +104,30 @@ public class NotifyPanel extends Composite {
 		checkBoxFilter.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				notifyUser.resetAvailableUsersTable();
-				notifyRole.resetAvailableRolesTable();
-				Widget sender = (Widget) event.getSource();
-				if (((CheckBox) sender).getValue()) {
-					filter.setText("");
-					filter.setEnabled(true);
-				} else {
-					filter.setText("");
-					filter.setEnabled(false);
-					usersFilter = "";
-					groupsFilter = "";
-					getAll();
-				}
+			    notifyUser.resetAvailableUsersTable();
+                notifyRole.resetAvailableRolesTable();
+                Widget sender = (Widget) event.getSource();
+                if (((CheckBox) sender).getValue()) {
+                    filter.setText("");
+                    filter.setEnabled(true);
+                } else {
+                    filter.setText("");
+                    filter.setEnabled(false);
+                    usersFilter = "";
+                    groupsFilter = "";
+                    users = new ArrayList<String>();
+                    roles = new ArrayList<String>();
+                    for (String user : notifyUser.getUsersToNotify().split(",")) {
+                        users.add(user);
+                    }
+                    for (String role : notifyRole.getRolesToNotify().split(",")) {
+                        roles.add(role);
+                    }
+                    notifyUser.reset();
+                    notifyRole.reset();
+                    notifyUser.getAllUsers(users, NotifyUser.DEFAULT);
+                    notifyRole.getAllRoles(roles, NotifyRole.DEFAULT);
+                }
 			}
 		});
 		filter = new TextBox();
@@ -153,6 +169,12 @@ public class NotifyPanel extends Composite {
 		externalUserHTML = new HTML(Main.i18n("security.notify.external.mail"));
 		externalMailAddress = new TextBox();
 		externalMailAddress.setWidth("374px");
+		externalMailAddress.addKeyUpHandler(new KeyUpHandler() {
+            @Override
+            public void onKeyUp(KeyUpEvent event) {
+                notifyChange.onChange();
+            }
+        });
 		externalMailAddress.setStyleName("okm-Input");
 		vNotifyExternalUserPanel.add(Util.vSpace("5px"));
 		vNotifyExternalUserPanel.add(externalUserHTML);
@@ -225,14 +247,30 @@ public class NotifyPanel extends Composite {
 	}
 
 	/**
+     * Gets all users and roles
+     */
+    public void getAll() {
+        if (!filterView || !checkBoxFilter.getValue()) {
+            notifyUser.getAllUsers(null, NotifyUser.DEFAULT);
+            notifyRole.getAllRoles(null, NotifyRole.DEFAULT);
+        }
+    }
+    
+	/**
 	 * Gets all users and roles
 	 */
-	public void getAll() {
-		if (!filterView || !checkBoxFilter.getValue()) {
-			notifyUser.getAllUsers();
-			notifyRole.getAllRoles();
-		}
-	}
+	public void getAll(List<String> users, List<String> roles, String externalMailAddress) {
+        this.users = users;
+        this.roles = roles;
+        this.externalMailAddress.setText(externalMailAddress);
+        if (!filterView || !checkBoxFilter.getValue()) {
+            notifyUser.getAllUsers(users, NotifyUser.DEFAULT);
+            notifyRole.getAllRoles(roles, NotifyRole.DEFAULT);
+        } else {
+            notifyUser.getAllUsers(users, NotifyUser.FILTER);
+            notifyRole.getAllRoles(roles, NotifyRole.FILTER);
+        }
+    }
 
 	/**
 	 * enableAdvancedFilter

@@ -89,6 +89,7 @@ public class MainMenu extends Composite {
 	private MenuItem sendDocumentLink;
 	private MenuItem sendDocumentAttachment;
 	private MenuItem forwardMail;
+	private MenuItem writeMail;
 	private MenuItem createFromTemplate;
 	private MenuItem export;
 	private MenuItem horizontalLineFile1;
@@ -222,6 +223,9 @@ public class MainMenu extends Composite {
 		forwardMail = new MenuItem(Util.menuHTML("img/email_forward.png", Main.i18n("general.menu.file.send.forward.mail")), true,
 				sendMailForwardOKM);
 		forwardMail.addStyleName("okm-MainMenuItem");
+		writeMail = new MenuItem(Util.menuHTML("img/icon/actions/write_mail.png", Main.i18n("general.menu.file.write.mail")), true,
+                sendNewMailOKM);
+        writeMail.addStyleName("okm-MainMenuItem");
 		createFromTemplate = new MenuItem(Util.menuHTML("img/icon/actions/create_from_template.gif",
 				Main.i18n("general.menu.file.create.from.template")), true, createFromTemplateOKM);
 		createFromTemplate.addStyleName("okm-MainMenuItem");
@@ -790,6 +794,12 @@ public class MainMenu extends Composite {
 			disable(forwardMail);
 		}
 
+		if (mainMenuOption.writeMailOption) {
+            enable(writeMail);
+        } else {
+            disable(writeMail);
+        }
+		
 		if (mainMenuOption.createFromTemplateOption) {
 			enable(createFromTemplate);
 		} else {
@@ -1183,6 +1193,15 @@ public class MainMenu extends Composite {
 		}
 	};
 
+	// Command menu to send mail
+    Command sendNewMailOKM = new Command() {
+        public void execute() {
+            if (mainMenuOption.writeMailOption) {
+                Main.get().mainPanel.topPanel.toolBar.executeWriteMail();
+            }
+        }
+    };
+    
 	// Command menu to send document attachment
 	Command createFromTemplateOKM = new Command() {
 		@Override

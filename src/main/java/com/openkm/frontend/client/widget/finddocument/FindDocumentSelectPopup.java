@@ -23,11 +23,13 @@ package com.openkm.frontend.client.widget.finddocument;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.*;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.openkm.frontend.client.Main;
 import com.openkm.frontend.client.bean.*;
+import com.openkm.frontend.client.constants.service.RPCService;
 import com.openkm.frontend.client.constants.ui.UIDesktopConstants;
 import com.openkm.frontend.client.service.OKMSearchService;
 import com.openkm.frontend.client.service.OKMSearchServiceAsync;
@@ -47,6 +49,9 @@ import java.util.Iterator;
 public class FindDocumentSelectPopup extends DialogBox {
 	private final OKMSearchServiceAsync searchService = (OKMSearchServiceAsync) GWT.create(OKMSearchService.class);
 
+	public static final int ORIGIN_DEFAULT = 1;
+    public static final int ORIGIN_MAIL_EDITOR_ATTACHMENT = 2;
+	
 	private VerticalPanel vPanel;
 	private HorizontalPanel hPanel;
 	public ScrollPanel scrollDocumentPanel;
@@ -56,6 +61,7 @@ public class FindDocumentSelectPopup extends DialogBox {
 	private TextBox keyword;
 	private FlexTable documentTable;
 	private int selectedRow = -1;
+	private int type = ORIGIN_DEFAULT;
 
 	/**
 	 * FindDocumentSelectPopup
@@ -156,9 +162,10 @@ public class FindDocumentSelectPopup extends DialogBox {
 		documentTable.addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
-				String docPath = documentTable.getText(selectedRow, 1);
-				CommonUI.openPath(Util.getParent(docPath), docPath);
-				hide();
+			    String docPath = documentTable.getText(selectedRow, 1);
+                String uuid = documentTable.getText(selectedRow, 2);
+                String mimeType = documentTable.getText(selectedRow, 3);
+                addDocument(docPath, uuid, mimeType);
 			}
 		});
 
@@ -201,17 +208,45 @@ public class FindDocumentSelectPopup extends DialogBox {
 		cancelButton.setText(Main.i18n("button.close"));
 		actionButton.setText(Main.i18n("search.result.menu.go.document"));
 	}
+	
+	/**
+     * addDocument
+     */
+    public void addDocument(String docPath, String uuid, String mimeType) {        
+        switch (type) {
+            case ORIGIN_DEFAULT:
+                CommonUI.openPath(Util.getParent(docPath), docPath);
+                break;
+
+            case ORIGIN_MAIL_EDITOR_ATTACHMENT:
+                FlowPanel fPanel = Main.get().mailEditorPopup.attachmentFPanel;
+                Main.get().mailEditorPopup.addAttachment(uuid, mimeType, Util.getName(docPath), fPanel, null);
+                break;
+        }               
+        hide();        
+    }
 
 	/**
 	 * Shows the popup 
 	 */
-	public void show() {
+	public void show(int type) {
+	    this.type = type;
 		initButtons();
 		int left = (Window.getClientWidth() - 700) / 2;
 		int top = (Window.getClientHeight() - 350) / 2;
 		setPopupPosition(left, top);
 		setText(Main.i18n("search.document.filter"));
 
+		switch (type) {
+            case ORIGIN_DEFAULT:
+                actionButton.setText(Main.i18n("search.result.menu.go.document"));                
+                break;
+
+            default:
+                actionButton.setText(Main.i18n("button.select"));                
+                break;
+        }
+		
 		// Resets to initial tree value
 		removeAllRows();
 		keyword.setText("");

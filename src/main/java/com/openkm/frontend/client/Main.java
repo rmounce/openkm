@@ -21,6 +21,10 @@
 
 package com.openkm.frontend.client;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import com.allen_sauer.gwt.log.client.DivLogger;
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.EntryPoint;
@@ -41,29 +45,57 @@ import com.openkm.frontend.client.extension.event.HasLanguageEvent;
 import com.openkm.frontend.client.extension.event.handler.LanguageHandlerExtension;
 import com.openkm.frontend.client.extension.event.hashandler.HasLanguageHandlerExtension;
 import com.openkm.frontend.client.panel.ExtendedDockPanel;
-import com.openkm.frontend.client.service.*;
-import com.openkm.frontend.client.util.*;
-import com.openkm.frontend.client.widget.*;
+import com.openkm.frontend.client.service.OKMDocumentService;
+import com.openkm.frontend.client.service.OKMDocumentServiceAsync;
+import com.openkm.frontend.client.service.OKMFolderService;
+import com.openkm.frontend.client.service.OKMFolderServiceAsync;
+import com.openkm.frontend.client.service.OKMLanguageService;
+import com.openkm.frontend.client.service.OKMLanguageServiceAsync;
+import com.openkm.frontend.client.service.OKMMailService;
+import com.openkm.frontend.client.service.OKMMailServiceAsync;
+import com.openkm.frontend.client.service.OKMRepositoryService;
+import com.openkm.frontend.client.service.OKMRepositoryServiceAsync;
+import com.openkm.frontend.client.util.CommonUI;
+import com.openkm.frontend.client.util.ConversionStatus;
+import com.openkm.frontend.client.util.Location;
+import com.openkm.frontend.client.util.Util;
+import com.openkm.frontend.client.util.WindowUtils;
+import com.openkm.frontend.client.util.WorkspaceUserProperties;
+import com.openkm.frontend.client.widget.AboutPopup;
+import com.openkm.frontend.client.widget.ConfirmPopup;
+import com.openkm.frontend.client.widget.DebugConsolePopup;
+import com.openkm.frontend.client.widget.Draggable;
+import com.openkm.frontend.client.widget.ErrorPopup;
+import com.openkm.frontend.client.widget.ExternalURLPopup;
+import com.openkm.frontend.client.widget.LogoutPopup;
+import com.openkm.frontend.client.widget.MsgPopup;
+import com.openkm.frontend.client.widget.ReportPopup;
+import com.openkm.frontend.client.widget.TemplatePopup;
+import com.openkm.frontend.client.widget.UserPopup;
+import com.openkm.frontend.client.widget.WorkflowPopup;
 import com.openkm.frontend.client.widget.chat.OnlineUsersPopup;
 import com.openkm.frontend.client.widget.filebrowser.uploader.DragAndDropUploadFilesPopup;
 import com.openkm.frontend.client.widget.finddocument.FindDocumentSelectPopup;
 import com.openkm.frontend.client.widget.findfolder.FindFolderSelectPopup;
 import com.openkm.frontend.client.widget.findsimilar.FindSimilarDocumentSelectPopup;
 import com.openkm.frontend.client.widget.foldertree.FolderTree;
-import com.openkm.frontend.client.widget.massive.*;
+import com.openkm.frontend.client.widget.massive.CategoriesPopup;
+import com.openkm.frontend.client.widget.massive.ConvertPopup;
+import com.openkm.frontend.client.widget.massive.KeywordsPopup;
+import com.openkm.frontend.client.widget.massive.NotesPopup;
+import com.openkm.frontend.client.widget.massive.OmrPopup;
+import com.openkm.frontend.client.widget.massive.PdfMergePopup;
+import com.openkm.frontend.client.widget.massive.PropertyGroupPopup;
+import com.openkm.frontend.client.widget.massive.UpdatePropertyGroupPopup;
 import com.openkm.frontend.client.widget.notify.NotifyPopup;
 import com.openkm.frontend.client.widget.security.SecurityPopup;
+import com.openkm.frontend.client.widget.sendmail.MailEditorPopup;
 import com.openkm.frontend.client.widget.startup.StartUp;
 import com.openkm.frontend.client.widget.startup.StartUpPopup;
 import com.openkm.frontend.client.widget.test.TestPopup;
 import com.openkm.frontend.client.widget.upload.FileUploadPopup;
 import com.openkm.frontend.client.widget.wizard.TemplateWizardPopup;
 import com.openkm.frontend.client.widget.wizard.WizardPopup;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Main entry point application
@@ -123,6 +155,7 @@ public final class Main implements EntryPoint, HasLanguageHandlerExtension, HasL
 	public TemplatePopup templatePopup;
 	public ConversionStatus conversionStatus;
 	public UpdatePropertyGroupPopup updatePropertyGroupPopup;
+	public MailEditorPopup mailEditorPopup;
 	public ConvertPopup convertPopup;
 	public OmrPopup omrPopup;
 
@@ -468,6 +501,8 @@ public final class Main implements EntryPoint, HasLanguageHandlerExtension, HasL
 		updatePropertyGroupPopup.setWidth("250px");
 		updatePropertyGroupPopup.setHeight("50px");
 		updatePropertyGroupPopup.setStyleName("okm-Popup");
+		mailEditorPopup = new MailEditorPopup();
+        mailEditorPopup.setStyleName("okm-Popup");
 		convertPopup = new ConvertPopup();
 		convertPopup.setWidth("150px");
 		convertPopup.setHeight("50px");
@@ -510,7 +545,8 @@ public final class Main implements EntryPoint, HasLanguageHandlerExtension, HasL
 		mainPanel.topPanel.toolBar.initJavaScriptApi(mainPanel.topPanel.toolBar);
 		fileUpload.initJavaScriptApi();
 		new NavigatorComunicator().initJavaScriptApi();
-
+		mailEditorPopup.initJavaScriptApi(mailEditorPopup);
+		
 		// Initialize commonUI public js api
 		CommonUI commonUI = new CommonUI();
 		commonUI.initJavaScriptApi(commonUI);

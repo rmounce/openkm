@@ -358,6 +358,20 @@ public class CommonUI {
 		url += ".gif";
 		return url;
 	}
+	
+    /**
+     * showBackgrounGrayEffect
+     */
+    public static native void showBackgrounGrayEffect() /*-{
+        new $wnd.showBackgrounGrayEffect();
+    }-*/;
+
+    /**
+     * showBackgrounGrayEffect
+     */
+    public static native void hideBackgrounGrayEffect() /*-{
+        new $wnd.hideBackgrounGrayEffect();
+    }-*/;
 
 	/**
 	 * initJavaScriptApi

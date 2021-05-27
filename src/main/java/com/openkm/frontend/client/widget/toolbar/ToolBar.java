@@ -31,6 +31,7 @@ import com.openkm.frontend.client.constants.service.ErrorCode;
 import com.openkm.frontend.client.constants.ui.UIDesktopConstants;
 import com.openkm.frontend.client.constants.ui.UIDockPanelConstants;
 import com.openkm.frontend.client.constants.ui.UIFileUploadConstants;
+import com.openkm.frontend.client.extension.comunicator.GeneralComunicator;
 import com.openkm.frontend.client.extension.event.HasToolBarEvent;
 import com.openkm.frontend.client.extension.event.handler.ToolBarHandlerExtension;
 import com.openkm.frontend.client.extension.event.hashandler.HasToolBarHandlerExtension;
@@ -57,7 +58,8 @@ public class ToolBar extends Composite implements OriginPanel, HasToolBarEvent, 
 	private final OKMDocumentServiceAsync documentService = (OKMDocumentServiceAsync) GWT.create(OKMDocumentService.class);
 	private final OKMFolderServiceAsync folderService = (OKMFolderServiceAsync) GWT.create(OKMFolderService.class);
 	private final OKMPropertyGroupServiceAsync propertyGroupService = (OKMPropertyGroupServiceAsync) GWT.create(OKMPropertyGroupService.class);
-
+	private static final OKMWorkspaceServiceAsync workspaceService = (OKMWorkspaceServiceAsync) GWT.create(OKMWorkspaceService.class);
+	
 	private HorizontalPanel panel;
 	private ToolBarButton createFolder;
 	private ToolBarButton find;
@@ -66,6 +68,7 @@ public class ToolBar extends Composite implements OriginPanel, HasToolBarEvent, 
 	private ToolBarButton print;
 	private ToolBarButton lock;
 	private ToolBarButton unlock;
+	private ToolBarButton writeMail;
 	private ToolBarButton addDocument;
 	private ToolBarButton checkout;
 	private ToolBarButton checkin;
@@ -248,6 +251,57 @@ public class ToolBar extends Composite implements OriginPanel, HasToolBarEvent, 
 		fireEvent(HasToolBarEvent.EXECUTE_ADD_DOCUMENT);
 	}
 
+	/**
+     * Write mail Handler
+     */
+    ClickHandler writeMailHandler = new ClickHandler() {
+        @Override
+        public void onClick(ClickEvent event) {
+            if (toolBarOption.writeMailOption) {
+                executeWriteMail();
+            }
+        }
+    };
+
+    /**
+     * executeAddRecord
+     */
+    public void executeWriteMail() {
+
+        // Check if mails storage is in current folder or in default folder
+        if (Main.get().mainPanel.bottomPanel.userInfo.isQuotaExceed()) {
+            Main.get().showError("UserQuotaExceed",
+                    new OKMException("OKM-" + ErrorCode.ORIGIN_OKMBrowser + ErrorCode.CAUSE_QuotaExceed, ""));
+        } else if (GeneralComunicator.getWorkspace().getSentMailStorage().equalsIgnoreCase(GWTWorkspace.MAIL_STORAGE_MAIL_FOLDER)) {
+            // Check if system is in read only mode
+            workspaceService.getUserWorkspace(new AsyncCallback<GWTWorkspace>() {
+                @Override
+                public void onSuccess(GWTWorkspace result) {
+                    if (!result.isSystemReadOnly()) {
+                        showMailPopup();
+                    } else {
+                        Main.get().showError("SystemReadOnly",
+                                new OKMException("OKM-" + ErrorCode.ORIGIN_OKMBrowser + ErrorCode.CAUSE_SystemReadOnlyMode, ""));
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    Main.get().showError("getUserWorkspace", caught);
+                }
+            });
+        } else {
+            showMailPopup();
+        }
+    }
+    
+    private void showMailPopup() {
+        Main.get().mailEditorPopup.setWidth("900px");
+        Main.get().mailEditorPopup.drawMailEditor();
+        //Main.get().mailEditorPopup.setHeight(GeneralComunicator.get().mainPanel.getOffsetHeight() + "px");
+        Main.get().mailEditorPopup.center();
+    }
+    
 	/**
 	 * Delete Handler
 	 */
@@ -2046,6 +2100,26 @@ public class ToolBar extends Composite implements OriginPanel, HasToolBarEvent, 
 	}
 
 	/**
+     * Disables write mail
+     */
+    public void disableWriteMail() {
+        toolBarOption.writeMailOption = false;
+        writeMail.setStyleName("okm-ToolBar-button-disabled");
+        writeMail.setResource(OKMBundleResources.INSTANCE.writeMailDisabled());
+        writeMail.setTitle(Main.i18n("general.menu.file.write.mail"));
+    }
+
+    /**
+     * Enables write mail
+     */
+    public void enableWriteMail() {
+        toolBarOption.writeMailOption = true;
+        writeMail.setStyleName("okm-ToolBar-button");
+        writeMail.setResource(OKMBundleResources.INSTANCE.writeMail());
+        writeMail.setTitle(Main.i18n("general.menu.file.write.mail"));
+    }
+    
+	/**
 	 * Disables add document
 	 */
 	public void disableAddDocument() {
@@ -2416,6 +2490,7 @@ public class ToolBar extends Composite implements OriginPanel, HasToolBarEvent, 
 		tmpToolBarOption.sendDocumentLinkOption = false;
 		tmpToolBarOption.sendDocumentAttachmentOption = false;
 		tmpToolBarOption.mailForwardOption = false;
+		tmpToolBarOption.writeMailOption = true;
 		tmpToolBarOption.moveOption = false;
 		tmpToolBarOption.exportOption = false;
 		tmpToolBarOption.workflowOption = false;
@@ -2470,6 +2545,7 @@ public class ToolBar extends Composite implements OriginPanel, HasToolBarEvent, 
 		tmpToolBarOption.sendDocumentLinkOption = false;
 		tmpToolBarOption.sendDocumentAttachmentOption = false;
 		tmpToolBarOption.mailForwardOption = false;
+		tmpToolBarOption.writeMailOption = true;
 		tmpToolBarOption.moveOption = false;
 		tmpToolBarOption.exportOption = false;
 		tmpToolBarOption.workflowOption = false;
@@ -2524,6 +2600,7 @@ public class ToolBar extends Composite implements OriginPanel, HasToolBarEvent, 
 		tmpToolBarOption.sendDocumentLinkOption = false;
 		tmpToolBarOption.sendDocumentAttachmentOption = false;
 		tmpToolBarOption.mailForwardOption = false;
+		tmpToolBarOption.writeMailOption = true;
 		tmpToolBarOption.moveOption = false;
 		tmpToolBarOption.exportOption = false;
 		tmpToolBarOption.workflowOption = false;
@@ -2578,6 +2655,7 @@ public class ToolBar extends Composite implements OriginPanel, HasToolBarEvent, 
 		tmpToolBarOption.sendDocumentLinkOption = false;
 		tmpToolBarOption.sendDocumentAttachmentOption = false;
 		tmpToolBarOption.mailForwardOption = false;
+		tmpToolBarOption.writeMailOption = true;
 		tmpToolBarOption.moveOption = false;
 		tmpToolBarOption.exportOption = false;
 		tmpToolBarOption.workflowOption = false;
@@ -2632,6 +2710,7 @@ public class ToolBar extends Composite implements OriginPanel, HasToolBarEvent, 
 		tmpToolBarOption.sendDocumentLinkOption = false;
 		tmpToolBarOption.sendDocumentAttachmentOption = false;
 		tmpToolBarOption.mailForwardOption = false;
+		tmpToolBarOption.writeMailOption = true;
 		tmpToolBarOption.moveOption = false;
 		tmpToolBarOption.exportOption = false;
 		tmpToolBarOption.workflowOption = false;
@@ -2686,6 +2765,7 @@ public class ToolBar extends Composite implements OriginPanel, HasToolBarEvent, 
 		tmpToolBarOption.sendDocumentLinkOption = false;
 		tmpToolBarOption.sendDocumentAttachmentOption = false;
 		tmpToolBarOption.mailForwardOption = false;
+		tmpToolBarOption.writeMailOption = true;
 		tmpToolBarOption.moveOption = false;
 		tmpToolBarOption.exportOption = false;
 		tmpToolBarOption.workflowOption = false;
@@ -2740,6 +2820,7 @@ public class ToolBar extends Composite implements OriginPanel, HasToolBarEvent, 
 		tmpToolBarOption.sendDocumentLinkOption = false;
 		tmpToolBarOption.sendDocumentAttachmentOption = false;
 		tmpToolBarOption.mailForwardOption = false;
+		tmpToolBarOption.writeMailOption = true;
 		tmpToolBarOption.moveOption = false;
 		tmpToolBarOption.exportOption = false;
 		tmpToolBarOption.workflowOption = false;
@@ -2794,6 +2875,7 @@ public class ToolBar extends Composite implements OriginPanel, HasToolBarEvent, 
 		tmpToolBarOption.sendDocumentLinkOption = false;
 		tmpToolBarOption.sendDocumentAttachmentOption = false;
 		tmpToolBarOption.mailForwardOption = false;
+		tmpToolBarOption.writeMailOption = true;
 		tmpToolBarOption.moveOption = false;
 		tmpToolBarOption.exportOption = false;
 		tmpToolBarOption.workflowOption = false;
@@ -2848,6 +2930,7 @@ public class ToolBar extends Composite implements OriginPanel, HasToolBarEvent, 
 		tmpToolBarOption.sendDocumentLinkOption = false;
 		tmpToolBarOption.sendDocumentAttachmentOption = false;
 		tmpToolBarOption.mailForwardOption = false;
+		tmpToolBarOption.writeMailOption = false;
 		tmpToolBarOption.moveOption = false;
 		tmpToolBarOption.exportOption = false;
 		tmpToolBarOption.workflowOption = false;
@@ -2902,6 +2985,7 @@ public class ToolBar extends Composite implements OriginPanel, HasToolBarEvent, 
 		tmpToolBarOption.sendDocumentLinkOption = false;
 		tmpToolBarOption.sendDocumentAttachmentOption = false;
 		tmpToolBarOption.mailForwardOption = false;
+		tmpToolBarOption.writeMailOption = false;
 		tmpToolBarOption.moveOption = false;
 		tmpToolBarOption.exportOption = false;
 		tmpToolBarOption.workflowOption = false;
@@ -2956,6 +3040,7 @@ public class ToolBar extends Composite implements OriginPanel, HasToolBarEvent, 
 		tmpToolBarOption.sendDocumentLinkOption = false;
 		tmpToolBarOption.sendDocumentAttachmentOption = false;
 		tmpToolBarOption.mailForwardOption = false;
+		tmpToolBarOption.writeMailOption = false;
 		tmpToolBarOption.moveOption = false;
 		tmpToolBarOption.exportOption = false;
 		tmpToolBarOption.workflowOption = false;
@@ -3010,6 +3095,7 @@ public class ToolBar extends Composite implements OriginPanel, HasToolBarEvent, 
 		tmpToolBarOption.sendDocumentLinkOption = false;
 		tmpToolBarOption.sendDocumentAttachmentOption = false;
 		tmpToolBarOption.mailForwardOption = false;
+		tmpToolBarOption.writeMailOption = false;
 		tmpToolBarOption.moveOption = false;
 		tmpToolBarOption.exportOption = false;
 		tmpToolBarOption.workflowOption = false;
@@ -3044,6 +3130,12 @@ public class ToolBar extends Composite implements OriginPanel, HasToolBarEvent, 
 			disableFind();
 		}
 
+		if (toolBarOption.writeMailOption) {
+            enableWriteMail();
+        } else {
+            disableWriteMail();
+        }
+		
 		if (toolBarOption.addDocumentOption) {
 			enableAddDocument();
 		} else {
@@ -3620,6 +3712,7 @@ public class ToolBar extends Composite implements OriginPanel, HasToolBarEvent, 
 		toolBarOption.sendDocumentLinkOption = false;
 		toolBarOption.sendDocumentAttachmentOption = false;
 		toolBarOption.mailForwardOption = false;
+		toolBarOption.writeMailOption = false;
 		toolBarOption.moveOption = false;
 		toolBarOption.exportOption = false;
 		toolBarOption.workflowOption = false;

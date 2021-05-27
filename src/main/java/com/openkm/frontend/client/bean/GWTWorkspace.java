@@ -33,6 +33,10 @@ import java.util.List;
  *
  */
 public class GWTWorkspace implements IsSerializable {
+    
+    public static final String MAIL_STORAGE_MAIL_FOLDER = "mail_fld";
+    public static final String MAIL_STORAGE_CURRENT_FOLDER = "current_fld";
+    
 	private String sessionId = "";
 	private GWTUser user;
 	private List<String> roleList = new ArrayList<String>();
@@ -52,6 +56,7 @@ public class GWTWorkspace implements IsSerializable {
 	private List<GWTReport> reports = new ArrayList<GWTReport>();
 	private int minSearchCharacters = 0;
 	private int securityExtendedMask = 0;
+	private boolean systemReadOnly = false;
 
 	// System wide
 	private GWTAppVersion appVersion = new GWTAppVersion();
@@ -84,6 +89,7 @@ public class GWTWorkspace implements IsSerializable {
 	private boolean keywordEnabled;
 	private boolean uploadNotifyUsers;
 	private boolean notifyExternalUsers;
+	private String sentMailStorage = "";
 	private boolean acrobatPluginPreview;
 	private int increaseVersion = 0;
 	private boolean userQuotaEnabled;
@@ -369,6 +375,14 @@ public class GWTWorkspace implements IsSerializable {
 	public void setNotifyExternalUsers(boolean notifyExternalUsers) {
 		this.notifyExternalUsers = notifyExternalUsers;
 	}
+
+    public String getSentMailStorage() {
+        return sentMailStorage;
+    }
+
+    public void setSentMailStorage(String sentMailStorage) {
+        this.sentMailStorage = sentMailStorage;
+    }
 
 	public boolean isAcrobatPluginPreview() {
 		return acrobatPluginPreview;
@@ -833,6 +847,14 @@ public class GWTWorkspace implements IsSerializable {
 	public void setSecurityExtendedMask(int securityExtendedMask) {
 		this.securityExtendedMask = securityExtendedMask;
 	}
+
+    public boolean isSystemReadOnly() {
+        return systemReadOnly;
+    }
+
+    public void setSystemReadOnly(boolean systemReadOnly) {
+        this.systemReadOnly = systemReadOnly;
+    }
 
 	public boolean isTabMailPreviewVisible() {
 		return tabMailPreviewVisible;

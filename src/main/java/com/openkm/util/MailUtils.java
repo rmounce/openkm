@@ -916,7 +916,7 @@ public class MailUtils {
 	/**
 	 * Create mail path
 	 */
-	private static String createGroupPath(String token, String mailPath, Calendar receivedDate) throws DatabaseException,
+	public static String createGroupPath(String token, String mailPath, Calendar receivedDate) throws DatabaseException,
 			RepositoryException, AccessDeniedException, ItemExistsException, PathNotFoundException, ExtensionException,
 			AutomationException {
 		log.debug("createGroupPath({}, {})", mailPath, receivedDate);

@@ -63,6 +63,8 @@ public interface OKMAuthServiceAsync {
 	public void keepAlive(AsyncCallback<?> callback);
 
 	public void getAllUsers(AsyncCallback<List<GWTUser>> callback);
+	
+	public void getUsers(List<String> users, AsyncCallback<List<GWTUser>> callback);
 
 	public void getAllRoles(AsyncCallback<List<String>> callback);
 

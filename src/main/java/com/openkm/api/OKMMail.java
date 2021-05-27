@@ -28,9 +28,13 @@ import com.openkm.bean.ExtendedAttributes;
 import com.openkm.bean.Mail;
 import com.openkm.core.*;
 import com.openkm.extension.core.ExtensionException;
+import com.openkm.module.DocumentModule;
 import com.openkm.module.MailModule;
 import com.openkm.module.ModuleManager;
+import com.openkm.module.RepositoryModule;
+import com.openkm.principal.PrincipalAdapterException;
 import com.openkm.spring.PrincipalUtils;
+import com.openkm.util.ApiAccounting;
 import com.openkm.util.MailUtils;
 import com.openkm.util.PathUtils;
 import org.apache.commons.io.IOUtils;
@@ -42,6 +46,7 @@ import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
@@ -215,6 +220,88 @@ public class OKMMail implements MailModule {
 		return newMail;
 	}
 
+	/**
+     * Send mail with attachments or link to OpenKM documents
+     *
+     * @param toRecipients  Mail destination list.
+     * @param ccRecipients  Mail destination list copy.
+     * @param bccRecipients Mail destination list hidden copy.
+     * @param replyToMails  Mails to reply to.
+     * @param subject       The subject of the mail.
+     * @param body          The mail message body.
+     * @param docsId        List of documents to be attached.
+     * @param dstId         Where the document will be stored. If null, mail it not stored.
+     */
+    public Mail sendMailWithAttachments(String token, List<String> toRecipients, List<String> ccRecipients, List<String> bccRecipients,
+            List<String> replyToMails, String subject, String body, List<String> docsId, String dstId) throws AccessDeniedException,
+            PathNotFoundException, ItemExistsException, AutomationException, VirusDetectedException, UserQuotaExceededException,
+            UnsupportedMimeTypeException, FileSizeExceededException, ExtensionException, RepositoryException, PrincipalAdapterException,
+            DatabaseException, IOException {
+        return sendMailWithAttachments(token, null, toRecipients, ccRecipients, bccRecipients, replyToMails, subject, body, docsId, dstId);
+    }
+
+    /**
+     * Send mail with attachments or link to OpenKM documents
+     *
+     * @param toRecipients  Mail destination list.
+     * @param ccRecipients  Mail destination list copy.
+     * @param bccRecipients Mail destination list hidden copy.
+     * @param replyToMails  Mails to reply to.
+     * @param subject       The subject of the mail.
+     * @param body          The mail message body.
+     * @param docsId        List of documents to be attached.
+     * @param dstId         Where the document will be stored. If null, mail it not stored.
+     */
+    public Mail sendMailWithAttachments(String token, String from, List<String> toRecipients, List<String> ccRecipients, List<String> bccRecipients,
+            List<String> replyToMails, String subject, String body, List<String> docsId, String dstId) throws AccessDeniedException,
+            PathNotFoundException, ItemExistsException, AutomationException, VirusDetectedException, UserQuotaExceededException,
+            UnsupportedMimeTypeException, FileSizeExceededException, ExtensionException, RepositoryException, DatabaseException, IOException {
+        log.debug("sendMailWithAttachments({}, {}, {}, {}, {}, {}, {}, {})", token, toRecipients, ccRecipients, bccRecipients, replyToMails, subject, body, docsId);
+        RepositoryModule rp = ModuleManager.getRepositoryModule();
+        DocumentModule dm = ModuleManager.getDocumentModule();
+        MailModule mm = ModuleManager.getMailModule();
+        List<String> docsPath = new ArrayList<>();
+        Mail newMail = null;
+
+        for (String docId : docsId) {
+            if (PathUtils.isPath(docId)) {
+                docsPath.add(docId);
+            } else {
+                docsPath.add(rp.getNodePath(token, docId));
+            }
+        }
+
+        try {
+            MimeMessage msg = MailUtils.sendDocuments(from, replyToMails, toRecipients, ccRecipients, bccRecipients, subject, body, docsPath);
+            Mail mail = MailUtils.messageToMail(msg, null, Mail.ORIGIN_EML);
+
+            if (dstId != null && !dstId.isEmpty()) {
+                String dstPath = dstId;
+
+                if (!PathUtils.isPath(dstPath)) {
+                    dstPath = rp.getNodePath(token, dstId);
+                }
+
+                // Create phantom path. In this case we don't have the IMAP message ID, son create a random one.
+                String name = UUID.randomUUID().toString() + "-" + PathUtils.escape(mail.getSubject());
+                mail.setPath(dstPath + "/" + name);
+                newMail = mm.create(token, mail);
+
+                for (String docPath : docsPath) {
+                    String docName = PathUtils.getName(docPath);
+                    InputStream is = dm.getContent(token, docPath, false);
+                    mm.createAttachment(token, newMail.getUuid(), docName, is);
+                    IOUtils.closeQuietly(is);
+                }
+            }
+        } catch (MessagingException e) {
+            throw new IOException(e.getMessage(), e);
+        }
+
+        log.debug("sendMailWithAttachments: {}", newMail);
+        return newMail;
+    }
+    
 	/**
 	 * Import MSG file as MailNode.
 	 */

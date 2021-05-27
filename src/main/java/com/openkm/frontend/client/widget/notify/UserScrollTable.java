@@ -23,6 +23,10 @@ package com.openkm.frontend.client.widget.notify;
 
 import com.google.gwt.gen2.table.client.AbstractScrollTable.ScrollPolicy;
 import com.google.gwt.gen2.table.client.AbstractScrollTable.ScrollTableImages;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
 import com.google.gwt.gen2.table.client.FixedWidthGrid;
 import com.google.gwt.gen2.table.client.ScrollTable;
@@ -42,7 +46,7 @@ import java.util.List;
  * @author jllort
  *
  */
-public class UserScrollTable extends Composite {
+public class UserScrollTable extends Composite implements HasDoubleClickHandlers {
 	// Number of columns
 	public static final int NUMBER_OF_COLUMNS = 2;
 
@@ -269,4 +273,9 @@ public class UserScrollTable extends Composite {
 	public FixedWidthGrid getDataTable() {
 		return table.getDataTable();
 	}
+	
+	@Override
+    public HandlerRegistration addDoubleClickHandler(DoubleClickHandler handler) {
+        return addDomHandler(handler, DoubleClickEvent.getType());
+    }
 }

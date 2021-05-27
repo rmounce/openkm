@@ -33,6 +33,9 @@ import java.util.*;
  *
  */
 public class GWTMail implements IsSerializable {
+    
+    public static final String SENT = "sent";
+    
 	private String path;
 	private String uuid;
 	private int permissions;

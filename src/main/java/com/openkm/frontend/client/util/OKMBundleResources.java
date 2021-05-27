@@ -480,4 +480,25 @@ public interface OKMBundleResources extends ClientBundle {
 
 	@Source("com/openkm/frontend/public/img/icon/actions/clipboard_small.png")
 	ImageResource clipboardSmall();
+	
+    @Source("com/openkm/frontend/public/img/icon/actions/write_mail.png")
+    ImageResource writeMail();
+
+    @Source("com/openkm/frontend/public/img/icon/actions/write_mail_disabled.png")
+    ImageResource writeMailDisabled();
+    
+    @Source("com/openkm/frontend/public/img/icon/actions/button_close.png")
+    ImageResource buttonClose();
+
+    @Source("com/openkm/frontend/public/img/icon/actions/button_maximize.png")
+    ImageResource buttonMaximize();
+
+    @Source("com/openkm/frontend/public/img/icon/actions/button_minimize.png")
+    ImageResource buttonMinimize();
+    
+    @Source("com/openkm/frontend/public/img/icon/actions/user.png")
+    ImageResource user();
+    
+    @Source("com/openkm/frontend/public/img/icon/actions/attachment.png")
+    ImageResource attachment();
 }

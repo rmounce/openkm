@@ -66,6 +66,8 @@ public interface OKMAuthService extends RemoteService {
 	public void keepAlive() throws OKMException;
 
 	public List<GWTUser> getAllUsers() throws OKMException;
+	
+	List<GWTUser> getUsers(List<String> users) throws OKMException;
 
 	public List<String> getAllRoles() throws OKMException;
 
