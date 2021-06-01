@@ -22,11 +22,14 @@
 package com.openkm.module;
 
 import com.openkm.automation.AutomationException;
+import com.openkm.bean.Document;
 import com.openkm.bean.ExtendedAttributes;
 import com.openkm.bean.Mail;
 import com.openkm.core.*;
+import com.openkm.extension.core.ExtensionException;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 public interface MailModule {
@@ -58,6 +61,32 @@ public interface MailModule {
 	public Mail getProperties(String token, String mailId) throws AccessDeniedException, PathNotFoundException,
 			RepositoryException, DatabaseException;
 
+	/**
+     * Create a new mail attachment
+     *
+     * @param mailId The path that identifies an unique mail, or its UUID.
+     */
+    Document createAttachment(String token, String mailId, String docName, InputStream is) throws UnsupportedMimeTypeException,
+            FileSizeExceededException, UserQuotaExceededException, VirusDetectedException, ItemExistsException, PathNotFoundException,
+            AccessDeniedException, RepositoryException, IOException, DatabaseException, ExtensionException, AutomationException;
+
+    /**
+     * Delete an attachment
+     *
+     * @param mailId The path that identifies an unique mail, or its UUID.
+     * @param docId  The path that identifies an unique document, or its UUID.
+     */
+    void deleteAttachment(String token, String mailId, String docId) throws LockException, PathNotFoundException, AccessDeniedException,
+            RepositoryException, DatabaseException;
+
+    /**
+     * Obtain all the attachments
+     *
+     * @param mailId The path that identifies an unique mail, or its UUID.
+     */
+    List<Document> getAttachments(String token, String mailId) throws AccessDeniedException, PathNotFoundException, RepositoryException,
+            DatabaseException;
+    
 	/**
 	 * Delete a mail the repository. It is a logical delete,
 	 * so really is moved to the user trash and can be restored.

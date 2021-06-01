@@ -21,12 +21,37 @@
 
 package com.openkm.api;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.UUID;
+
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.internet.MimeMessage;
+
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.auxilii.msgparser.Message;
 import com.auxilii.msgparser.MsgParser;
 import com.openkm.automation.AutomationException;
+import com.openkm.bean.Document;
 import com.openkm.bean.ExtendedAttributes;
 import com.openkm.bean.Mail;
-import com.openkm.core.*;
+import com.openkm.core.AccessDeniedException;
+import com.openkm.core.DatabaseException;
+import com.openkm.core.FileSizeExceededException;
+import com.openkm.core.ItemExistsException;
+import com.openkm.core.LockException;
+import com.openkm.core.PathNotFoundException;
+import com.openkm.core.RepositoryException;
+import com.openkm.core.UnsupportedMimeTypeException;
+import com.openkm.core.UserQuotaExceededException;
+import com.openkm.core.VirusDetectedException;
 import com.openkm.extension.core.ExtensionException;
 import com.openkm.module.DocumentModule;
 import com.openkm.module.MailModule;
@@ -34,22 +59,8 @@ import com.openkm.module.ModuleManager;
 import com.openkm.module.RepositoryModule;
 import com.openkm.principal.PrincipalAdapterException;
 import com.openkm.spring.PrincipalUtils;
-import com.openkm.util.ApiAccounting;
 import com.openkm.util.MailUtils;
 import com.openkm.util.PathUtils;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.internet.MimeMessage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.UUID;
 
 /**
  * @author pavila
@@ -86,6 +97,36 @@ public class OKMMail implements MailModule {
 		return mail;
 	}
 
+	@Override
+    public Document createAttachment(String token, String mailId, String docName, InputStream is) throws UnsupportedMimeTypeException,
+            FileSizeExceededException, UserQuotaExceededException, VirusDetectedException, ItemExistsException, PathNotFoundException,
+            AccessDeniedException, RepositoryException, IOException, DatabaseException, AutomationException, ExtensionException {
+        log.debug("createAttachment({}, {}, {}, {})", new Object[]{token, mailId, docName, is});
+        MailModule mm = ModuleManager.getMailModule();
+        Document newDocument = mm.createAttachment(token, mailId, docName, is);        
+        log.debug("createAttachment: {}", newDocument);
+        return newDocument;
+    }
+
+    @Override
+    public void deleteAttachment(String token, String mailId, String docId) throws LockException, PathNotFoundException, AccessDeniedException,
+            RepositoryException, DatabaseException {
+        log.debug("deleteAttachment({})", docId);
+        MailModule mm = ModuleManager.getMailModule();
+        mm.deleteAttachment(token, mailId, docId);        
+        log.debug("deleteAttachment: void");
+    }
+
+    @Override
+    public List<Document> getAttachments(String token, String mailId) throws AccessDeniedException, PathNotFoundException, RepositoryException,
+            DatabaseException {
+        log.debug("getAttachments({}, {})", token, mailId);
+        MailModule mm = ModuleManager.getMailModule();
+        List<Document> col = mm.getAttachments(token, mailId);
+        log.debug("getAttachments: {}", col);
+        return col;
+    }
+    
 	@Override
 	public void delete(String token, String mailId) throws LockException, PathNotFoundException,
 			AccessDeniedException, RepositoryException, DatabaseException {
@@ -232,11 +273,11 @@ public class OKMMail implements MailModule {
      * @param docsId        List of documents to be attached.
      * @param dstId         Where the document will be stored. If null, mail it not stored.
      */
-    public Mail sendMailWithAttachments(String token, List<String> toRecipients, List<String> ccRecipients, List<String> bccRecipients,
-            List<String> replyToMails, String subject, String body, List<String> docsId, String dstId) throws AccessDeniedException,
-            PathNotFoundException, ItemExistsException, AutomationException, VirusDetectedException, UserQuotaExceededException,
-            UnsupportedMimeTypeException, FileSizeExceededException, ExtensionException, RepositoryException, PrincipalAdapterException,
-            DatabaseException, IOException {
+    public Mail sendMailWithAttachments(String token, List<String> toRecipients, List<String> ccRecipients,
+            List<String> bccRecipients, List<String> replyToMails, String subject, String body, List<String> docsId,
+            String dstId) throws AccessDeniedException, PathNotFoundException, ItemExistsException, AutomationException,
+            VirusDetectedException, UserQuotaExceededException, UnsupportedMimeTypeException, FileSizeExceededException,
+            ExtensionException, RepositoryException, PrincipalAdapterException, DatabaseException, IOException, LockException {
         return sendMailWithAttachments(token, null, toRecipients, ccRecipients, bccRecipients, replyToMails, subject, body, docsId, dstId);
     }
 
@@ -252,10 +293,11 @@ public class OKMMail implements MailModule {
      * @param docsId        List of documents to be attached.
      * @param dstId         Where the document will be stored. If null, mail it not stored.
      */
-    public Mail sendMailWithAttachments(String token, String from, List<String> toRecipients, List<String> ccRecipients, List<String> bccRecipients,
-            List<String> replyToMails, String subject, String body, List<String> docsId, String dstId) throws AccessDeniedException,
-            PathNotFoundException, ItemExistsException, AutomationException, VirusDetectedException, UserQuotaExceededException,
-            UnsupportedMimeTypeException, FileSizeExceededException, ExtensionException, RepositoryException, DatabaseException, IOException {
+    public Mail sendMailWithAttachments(String token, String from, List<String> toRecipients, List<String> ccRecipients,
+            List<String> bccRecipients, List<String> replyToMails, String subject, String body, List<String> docsId,
+            String dstId) throws AccessDeniedException, PathNotFoundException, ItemExistsException, AutomationException,
+            VirusDetectedException, UserQuotaExceededException, UnsupportedMimeTypeException, FileSizeExceededException,
+            ExtensionException, RepositoryException, DatabaseException, IOException, LockException {
         log.debug("sendMailWithAttachments({}, {}, {}, {}, {}, {}, {}, {})", token, toRecipients, ccRecipients, bccRecipients, replyToMails, subject, body, docsId);
         RepositoryModule rp = ModuleManager.getRepositoryModule();
         DocumentModule dm = ModuleManager.getDocumentModule();
@@ -273,7 +315,7 @@ public class OKMMail implements MailModule {
 
         try {
             MimeMessage msg = MailUtils.sendDocuments(from, replyToMails, toRecipients, ccRecipients, bccRecipients, subject, body, docsPath);
-            Mail mail = MailUtils.messageToMail(msg, null, Mail.ORIGIN_EML);
+            Mail mail = MailUtils.messageToMail(msg);
 
             if (dstId != null && !dstId.isEmpty()) {
                 String dstPath = dstId;

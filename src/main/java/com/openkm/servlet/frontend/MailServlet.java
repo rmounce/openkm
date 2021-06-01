@@ -21,12 +21,33 @@
 
 package com.openkm.servlet.frontend;
 
-import com.openkm.api.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import javax.mail.MessagingException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.openkm.api.OKMAuth;
+import com.openkm.api.OKMFolder;
+import com.openkm.api.OKMMail;
+import com.openkm.api.OKMRepository;
+import com.openkm.api.OKMSearch;
 import com.openkm.bean.Document;
 import com.openkm.bean.Mail;
 import com.openkm.bean.Repository;
-import com.openkm.core.*;
-import com.openkm.frontend.client.GWTException;
+import com.openkm.core.AccessDeniedException;
+import com.openkm.core.DatabaseException;
+import com.openkm.core.ItemExistsException;
+import com.openkm.core.LockException;
+import com.openkm.core.PathNotFoundException;
+import com.openkm.core.RepositoryException;
 import com.openkm.frontend.client.OKMException;
 import com.openkm.frontend.client.bean.GWTDocument;
 import com.openkm.frontend.client.bean.GWTMail;
@@ -42,12 +63,6 @@ import com.openkm.spring.PrincipalUtils;
 import com.openkm.util.GWTUtil;
 import com.openkm.util.MailUtils;
 import com.openkm.util.pagination.FilterUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.mail.MessagingException;
-import java.io.IOException;
-import java.util.*;
 
 /**
  * Servlet Class
@@ -524,9 +539,6 @@ public class MailServlet extends OKMRemoteServiceServlet implements OKMMailServi
             String from = new DbAuthModule().getMail(null, PrincipalUtils.getUser());
             Mail mail = OKMMail.getInstance().sendMailWithAttachments(null, from, toMails, ccMails, bccMails, replyToMails, subject, message, uuidList, path);
             return GWTUtil.copy(mail, getUserWorkspaceSession());
-        } catch (OKMException e) {
-            log.error(e.getMessage(), e);
-            throw new OKMException(ErrorCode.get(ErrorCode.ORIGIN_OKMMailService, ErrorCode.CAUSE_General), e.getMessage());
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             throw new OKMException(ErrorCode.get(ErrorCode.ORIGIN_OKMMailService, ErrorCode.CAUSE_IO), e.getMessage());
@@ -541,16 +553,12 @@ public class MailServlet extends OKMRemoteServiceServlet implements OKMMailServi
         List<GWTDocument> attachments = new ArrayList<>();
 
         try {
-            String lang = getLanguage();
             for (Document doc : OKMMail.getInstance().getAttachments(null, uuid)) {
                 GWTDocument gWTDoc = GWTUtil.copy(doc, getUserWorkspaceSession());
                 gWTDoc.setParentPath(GWTUtil.getParent(doc.getPath()));
                 gWTDoc.setName(GWTUtil.getName(doc.getPath()));
                 attachments.add(gWTDoc);
             }
-        } catch (OKMException e) {
-            log.error(e.getMessage(), e);
-            throw new OKMException(ErrorCode.get(ErrorCode.ORIGIN_OKMDocumentService, ErrorCode.CAUSE_General), e.getMessage());
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             throw new OKMException(ErrorCode.get(ErrorCode.ORIGIN_OKMDocumentService, ErrorCode.CAUSE_IO), e.getMessage());

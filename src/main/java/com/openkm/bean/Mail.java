@@ -23,7 +23,6 @@ package com.openkm.bean;
 
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -37,8 +36,6 @@ public class Mail extends Node {
 
 	public static final String MIME_TEXT = "text/plain";
 	public static final String MIME_HTML = "text/html";
-
-	public static final String ORIGIN_EML = "eml";
 	
 	public static final String TYPE = "okm:mail";
 	public static final String SIZE = "okm:size";
@@ -66,7 +63,7 @@ public class Mail extends Node {
 	private String content;
 	private String mimeType;
 	private long size;
-	private List<Document> attachments;
+	private boolean hasAttachments;
 
 	public String getFrom() {
 		return from;
@@ -156,13 +153,13 @@ public class Mail extends Node {
 		this.size = size;
 	}
 
-	public List<Document> getAttachments() {
-		return attachments;
-	}
+    public boolean isHasAttachments() {
+        return hasAttachments;
+    }
 
-	public void setAttachments(List<Document> attachments) {
-		this.attachments = attachments;
-	}
+    public void setHasAttachments(boolean hasAttachments) {
+        this.hasAttachments = hasAttachments;
+    }
 
 	@Override
 	public String toString() {
@@ -185,7 +182,7 @@ public class Mail extends Node {
 		sb.append(", keywords=").append(keywords);
 		sb.append(", categories=").append(categories);
 		sb.append(", notes=").append(notes);
-		sb.append(", attachments=").append(attachments);
+		sb.append(", hasAttachments=").append(hasAttachments);
 		sb.append("}");
 		return sb.toString();
 	}
