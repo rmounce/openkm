@@ -21,27 +21,46 @@
 
 package com.openkm.frontend.client.widget.searchresult;
 
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.openkm.frontend.client.Main;
-import com.openkm.frontend.client.bean.*;
+import com.openkm.frontend.client.bean.GWTDocument;
+import com.openkm.frontend.client.bean.GWTFilebrowseExtraColumn;
+import com.openkm.frontend.client.bean.GWTFolder;
+import com.openkm.frontend.client.bean.GWTMail;
+import com.openkm.frontend.client.bean.GWTPermission;
+import com.openkm.frontend.client.bean.GWTProfileFileBrowser;
+import com.openkm.frontend.client.bean.GWTPropertyGroup;
+import com.openkm.frontend.client.bean.GWTQueryResult;
 import com.openkm.frontend.client.bean.form.GWTFormElement;
 import com.openkm.frontend.client.service.OKMPropertyGroupService;
 import com.openkm.frontend.client.service.OKMPropertyGroupServiceAsync;
 import com.openkm.frontend.client.util.CommonUI;
 import com.openkm.frontend.client.util.OKMBundleResources;
 import com.openkm.frontend.client.util.Util;
-import com.openkm.frontend.client.widget.WidgetUtil;
 import com.openkm.frontend.client.widget.dashboard.keymap.TagCloud;
 import com.openkm.frontend.client.widget.form.FormManager;
 import com.openkm.frontend.client.widget.searchin.SearchControl;
-
-import java.util.*;
+import com.openkm.frontend.client.widget.util.WidgetUtil;
 
 /**
  * SearchFullResult
@@ -556,7 +575,7 @@ public class SearchFullResult extends Composite {
 		hPanel.add(new HTML(score.getHTML()));
 		hPanel.add(Util.hSpace("5px"));
 
-		if (mail.getAttachments().size() > 0) {
+		if (mail.isHasAttachments()) {
 			hPanel.add(new HTML(Util.imageItemHTML("img/email_attach.gif")));
 		} else {
 			hPanel.add(new HTML(Util.imageItemHTML("img/email.gif")));
@@ -612,7 +631,7 @@ public class SearchFullResult extends Composite {
 		DateTimeFormat dtf = DateTimeFormat.getFormat(Main.i18n("general.date.pattern"));
 		hPanel4.add(new HTML(dtf.format(mail.getCreated())));
 		table.setWidget(rows++, 0, hPanel4);
-
+        
 		// Extended columns
 		if (profileFileBrowser.isExtraColumns()) {
 			Map<GWTFilebrowseExtraColumn, GWTFormElement> ecMap = new LinkedHashMap<GWTFilebrowseExtraColumn, GWTFormElement>();

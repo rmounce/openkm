@@ -513,7 +513,7 @@ public class ExtendedScrollTable extends ScrollTable {
 		dataTable.getCellFormatter().setHorizontalAlignment(rows, col++, HasHorizontalAlignment.ALIGN_LEFT);
 
 		if (profileFileBrowser.isIconVisible()) {
-			if (mail.getAttachments().size() > 0) {
+			if (mail.isHasAttachments()) {
 				dataTable.setHTML(rows, col, Util.imageItemHTML("img/email_attach.gif"));
 			} else {
 				dataTable.setHTML(rows, col, Util.imageItemHTML("img/email.gif"));

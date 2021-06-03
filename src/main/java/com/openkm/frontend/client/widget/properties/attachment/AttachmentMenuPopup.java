@@ -23,6 +23,7 @@ package com.openkm.frontend.client.widget.properties.attachment;
 
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.openkm.frontend.client.bean.GWTDocument;
 
 /**
  * Attchment menu popup
@@ -30,8 +31,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author jllort
  *
  */
-public class AttachmentMenuPopup extends PopupPanel {
-
+public class AttachmentMenuPopup extends PopupPanel {  
 	private VerticalPanel panel;
 	private Menu menu;
 
@@ -44,6 +44,14 @@ public class AttachmentMenuPopup extends PopupPanel {
 		setWidget(panel);
 	}
 
+    /**
+     * show
+     */
+    public void show(GWTDocument doc) {
+        menu.set(doc);
+        super.show();
+    }
+	
 	/**
 	 * Refresh language values
 	 */

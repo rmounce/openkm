@@ -738,7 +738,7 @@ public class MailEditorPopup extends ExtendedDialogBoxWithBackgroundGrayEffect i
         new $wnd.cancelMailEditor();
     }-*/;
 
-	public void jsDrawMailEditor() {
+	public void jsDrawMailEditor4() {
 		String language = HTMLEditorUtils.getTinymceLang(GeneralComunicator.getLang());
 		String theme = GeneralComunicator.getWorkspace().getTinymceTheme();
 		String plugins = GeneralComunicator.getWorkspace().getTinymcePlugins();
@@ -759,7 +759,7 @@ public class MailEditorPopup extends ExtendedDialogBoxWithBackgroundGrayEffect i
 	public static native void drawMailEditor(String t_language, String t_theme, String t_plugins,
 	                                         String toolbar1, String toolbar2, String sendMailText, String cancelText,
 	                                         String searchDocumentText, String searchFolderText, String searchImageText) /*-{
-        new $wnd.drawMailEditor(t_language, t_theme, t_plugins, toolbar1, toolbar2, sendMailText, cancelText, searchDocumentText, searchFolderText, searchImageText);
+        new $wnd.drawMailEditor4(t_language, t_theme, t_plugins, toolbar1, toolbar2, sendMailText, cancelText, searchDocumentText, searchFolderText, searchImageText);
     }-*/;
 
 	/**
@@ -780,8 +780,8 @@ public class MailEditorPopup extends ExtendedDialogBoxWithBackgroundGrayEffect i
 	 * initJavaScriptApi
 	 */
 	public native void initJavaScriptApi(MailEditorPopup mailEditorPopup) /*-{
-        $wnd.jsDrawMailEditor = function () {
-            mailEditorPopup.@com.openkm.frontend.client.widget.sendmail.MailEditorPopup::jsDrawMailEditor()();
+        $wnd.jsDrawMailEditor4 = function () {
+            mailEditorPopup.@com.openkm.frontend.client.widget.sendmail.MailEditorPopup::jsDrawMailEditor4()();
             return true;
         }
 

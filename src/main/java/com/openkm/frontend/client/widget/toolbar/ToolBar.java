@@ -3843,6 +3843,13 @@ public class ToolBar extends Composite implements OriginPanel, HasToolBarEvent, 
 		evaluateDownload = ((extendedSecurity & GWTPermission.DOWNLOAD) == GWTPermission.DOWNLOAD);
 	}
 
+    /**
+     * isEvaluateDownlodd
+     */
+    public boolean isEvaluateDownload() {
+        return evaluateDownload;
+    }
+    
 	/**
 	 * addToolBarButton
 	 */

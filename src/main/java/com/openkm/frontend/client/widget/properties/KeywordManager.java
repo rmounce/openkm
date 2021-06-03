@@ -38,7 +38,7 @@ import com.openkm.frontend.client.service.OKMPropertyService;
 import com.openkm.frontend.client.service.OKMPropertyServiceAsync;
 import com.openkm.frontend.client.util.OKMBundleResources;
 import com.openkm.frontend.client.widget.ConfirmPopup;
-import com.openkm.frontend.client.widget.WidgetUtil;
+import com.openkm.frontend.client.widget.util.WidgetUtil;
 import com.openkm.frontend.client.widget.dashboard.ImageHover;
 import com.openkm.frontend.client.widget.dashboard.keymap.TagCloud;
 
