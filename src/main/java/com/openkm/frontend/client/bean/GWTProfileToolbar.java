@@ -40,6 +40,7 @@ public class GWTProfileToolbar implements IsSerializable {
 	private boolean lockVisible;
 	private boolean unlockVisible;
 	private boolean addDocumentVisible;
+	private boolean writeMailVisible;
 	private boolean checkoutVisible;
 	private boolean checkinVisible;
 	private boolean cancelCheckoutVisible;
@@ -133,9 +134,17 @@ public class GWTProfileToolbar implements IsSerializable {
 
 	public void setAddDocumentVisible(boolean addDocumentVisible) {
 		this.addDocumentVisible = addDocumentVisible;
-	}
+	}	
+	
+	public boolean isWriteMailVisible() {
+        return writeMailVisible;
+    }
 
-	public boolean isCheckoutVisible() {
+    public void setWriteMailVisible(boolean writeMailVisible) {
+        this.writeMailVisible = writeMailVisible;
+    }
+
+    public boolean isCheckoutVisible() {
 		return checkoutVisible;
 	}
 
@@ -248,32 +257,33 @@ public class GWTProfileToolbar implements IsSerializable {
 	}
 	
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("{");
-		sb.append("createFolderVisible=").append(createFolderVisible);
-		sb.append(", findFolderVisible=").append(findFolderVisible);
-		sb.append(", findDocumentVisible=").append(findDocumentVisible);
-		sb.append(", downloadVisible=").append(downloadVisible);
-		sb.append(", downloadPdfVisible=").append(downloadPdfVisible);
-		sb.append(", printVisible=").append(printVisible);
-		sb.append(", addDocumentVisible=").append(addDocumentVisible);
-		sb.append(", lockVisible=").append(lockVisible);
-		sb.append(", unlockVisible=").append(unlockVisible);
-		sb.append(", checkinVisible=").append(checkinVisible);
-		sb.append(", checkoutVisible=").append(checkoutVisible);
-		sb.append(", cancelCheckoutVisible=").append(cancelCheckoutVisible);
-		sb.append(", deleteVisible=").append(deleteVisible);
-		sb.append(", addPropertyGroupVisible=").append(addPropertyGroupVisible);
-		sb.append(", removePropertyGroupVisible=").append(removePropertyGroupVisible);
-		sb.append(", startWorkflowVisible=").append(startWorkflowVisible);
-		sb.append(", addSubscriptionVisible=").append(addSubscriptionVisible);
-		sb.append(", removeSubscriptionVisible=").append(removeSubscriptionVisible);
-		sb.append(", homeVisible=").append(homeVisible);
-		sb.append(", refreshVisible=").append(refreshVisible);		
-		sb.append(", uploaderVisible=").append(uploaderVisible);
-		sb.append(", splitterResizeVisible=").append(splitterResizeVisible);		
-		sb.append(", omrVisible=").append(omrVisible);
-		sb.append("}");
-		return sb.toString();
+	    StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        sb.append("createFolderVisible=").append(createFolderVisible);
+        sb.append(", findFolderVisible=").append(findFolderVisible);
+        sb.append(", findDocumentVisible=").append(findDocumentVisible);
+        sb.append(", similarDocumentVisible=").append(similarDocumentVisible);
+        sb.append(", downloadVisible=").append(downloadVisible);
+        sb.append(", downloadPdfVisible=").append(downloadPdfVisible);
+        sb.append(", printVisible=").append(printVisible);
+        sb.append(", addDocumentVisible=").append(addDocumentVisible);
+        sb.append(", lockVisible=").append(lockVisible);
+        sb.append(", unlockVisible=").append(unlockVisible);
+        sb.append(", checkinVisible=").append(checkinVisible);
+        sb.append(", checkoutVisible=").append(checkoutVisible);
+        sb.append(", cancelCheckoutVisible=").append(cancelCheckoutVisible);
+        sb.append(", deleteVisible=").append(deleteVisible);
+        sb.append(", addPropertyGroupVisible=").append(addPropertyGroupVisible);
+        sb.append(", removePropertyGroupVisible=").append(removePropertyGroupVisible);
+        sb.append(", startWorkflowVisible=").append(startWorkflowVisible);
+        sb.append(", addSubscriptionVisible=").append(addSubscriptionVisible);
+        sb.append(", removeSubscriptionVisible=").append(removeSubscriptionVisible);
+        sb.append(", homeVisible=").append(homeVisible);
+        sb.append(", refreshVisible=").append(refreshVisible);        
+        sb.append(", uploaderVisible=").append(uploaderVisible);
+        sb.append(", splitterResizeVisible=").append(splitterResizeVisible);        
+        sb.append(", omrVisible=").append(omrVisible);
+        sb.append("}");
+        return sb.toString();
 	}
 }

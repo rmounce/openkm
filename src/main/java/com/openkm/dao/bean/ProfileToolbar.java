@@ -35,6 +35,7 @@ public class ProfileToolbar implements Serializable {
 	private boolean lockVisible;
 	private boolean unlockVisible;
 	private boolean addDocumentVisible;
+	private boolean writeMailVisible;
 	private boolean checkoutVisible;
 	private boolean checkinVisible;
 	private boolean cancelCheckoutVisible;
@@ -129,7 +130,15 @@ public class ProfileToolbar implements Serializable {
 		this.addDocumentVisible = addDocumentVisible;
 	}
 
-	public boolean isCheckoutVisible() {
+	public boolean isWriteMailVisible() {
+        return writeMailVisible;
+    }
+
+    public void setWriteMailVisible(boolean writeMailVisible) {
+        this.writeMailVisible = writeMailVisible;
+    }
+
+    public boolean isCheckoutVisible() {
 		return checkoutVisible;
 	}
 

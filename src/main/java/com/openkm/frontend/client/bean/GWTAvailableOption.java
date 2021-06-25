@@ -67,6 +67,7 @@ public class GWTAvailableOption implements IsSerializable {
 	private boolean sendDocumentLinkOption = true;
 	private boolean sendDocumentAttachmentOption = true;
 	private boolean forwardMailOption = true;
+	private boolean writeMailOption = true;
 	private boolean skinOption = true;
 	private boolean debugOption = true;
 	private boolean administrationOption = true;
@@ -372,9 +373,17 @@ public class GWTAvailableOption implements IsSerializable {
 
 	public void setForwardMailOption(boolean forwardMailOption) {
 		this.forwardMailOption = forwardMailOption;
-	}
+	}	
 
-	public boolean isSkinOption() {
+	public boolean isWriteMailOption() {
+        return writeMailOption;
+    }
+
+    public void setWriteMailOption(boolean writeMailOption) {
+        this.writeMailOption = writeMailOption;
+    }
+
+    public boolean isSkinOption() {
 		return skinOption;
 	}
 

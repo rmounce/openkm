@@ -740,8 +740,8 @@ public class MailEditorPopup extends ExtendedDialogBoxWithBackgroundGrayEffect i
 
 	public void jsDrawMailEditor4() {
 		String language = HTMLEditorUtils.getTinymceLang(GeneralComunicator.getLang());
-		String theme = GeneralComunicator.getWorkspace().getTinymceTheme();
-		String plugins = GeneralComunicator.getWorkspace().getTinymcePlugins();
+		String theme = GeneralComunicator.getWorkspace().getTinymce4Theme();
+        String plugins = GeneralComunicator.getWorkspace().getTinymce4Plugins();
 		String toolbar1 = "okm_sendMail, okm_cancelSendMail, okm_searchDocument, okm_searchFolder, | ,styleselect, |, bold, italic, |, alignleft, aligncenter, alignright, alignjustify, | ,bullist, numlist, outdent, indent, | forecolor, backcolor, emoticons,";
 		String toolbar2 = "";
 		String sendMailText = GeneralComunicator.i18n("general.menu.file.send.mail");

@@ -43,7 +43,8 @@ public class ProfileMenuFile implements Serializable {
 	private boolean sendDocumentLinkVisible;
 	private boolean sendDocumentAttachmentVisible;
 	private boolean forwardMailVisible;
-
+	private boolean writeMailVisible = true;
+	
 	public boolean isCreateFolderVisible() {
 		return createFolderVisible;
 	}
@@ -186,25 +187,40 @@ public class ProfileMenuFile implements Serializable {
 
 	public void setForwardMailVisible(boolean forwardMailVisible) {
 		this.forwardMailVisible = forwardMailVisible;
-	}
+	}	    
 
-	@Override
+    public boolean isWriteMailVisible() {
+        return writeMailVisible;
+    }
+
+    public void setWriteMailVisible(boolean writeMailVisible) {
+        this.writeMailVisible = writeMailVisible;
+    }
+
+    @Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("{");
-		sb.append("createFolderVisible=").append(createFolderVisible);
-		sb.append(", findFolderVisible=").append(findFolderVisible);
-		sb.append(", findDocumentVisible=").append(findDocumentVisible);
-		sb.append(", similarDocumentVisible=");
-		sb.append(similarDocumentVisible);
-		sb.append(", goFolderVisible=").append(goFolderVisible);
-		sb.append(", downloadVisible=").append(downloadVisible);
-		sb.append(", downloadPdfVisible=").append(downloadPdfVisible);
-		;
-		sb.append(", addDocumentVisible=").append(addDocumentVisible);
-		sb.append(", startWorkflowVisible=").append(startWorkflowVisible);
-		sb.append(", refreshVisible=").append(refreshVisible);
-		sb.append("}");
-		return sb.toString();
+	    StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        sb.append("createFolderVisible=").append(createFolderVisible);
+        sb.append(", findFolderVisible=").append(findFolderVisible);
+        sb.append(", findDocumentVisible=").append(findDocumentVisible);        
+        sb.append(", similarDocumentVisible=").append(similarDocumentVisible);
+        sb.append(", goFolderVisible=").append(goFolderVisible);
+        sb.append(", downloadVisible=").append(downloadVisible);
+        sb.append(", downloadPdfVisible=").append(downloadPdfVisible);        
+        sb.append(", addDocumentVisible=").append(addDocumentVisible);        
+        sb.append(", startWorkflowVisible=").append(startWorkflowVisible);
+        sb.append(", refreshVisible=").append(refreshVisible);        
+        sb.append(", exportVisible=").append(exportVisible);
+        sb.append(", createFromTemplateVisible=").append(createFromTemplateVisible);
+        sb.append(", purgeVisible=").append(purgeVisible);
+        sb.append(", restoreVisible=").append(restoreVisible);
+        sb.append(", purgeTrashVisible=").append(purgeTrashVisible);
+        sb.append(", sendDocumentLinkVisible=").append(sendDocumentLinkVisible);
+        sb.append(", sendDocumentAttachmentVisible=").append(sendDocumentAttachmentVisible);        
+        sb.append(", forwardMailVisible=").append(forwardMailVisible);
+        sb.append(", writeMailVisible=").append(writeMailVisible);
+        sb.append("}");
+        return sb.toString();
 	}
 }

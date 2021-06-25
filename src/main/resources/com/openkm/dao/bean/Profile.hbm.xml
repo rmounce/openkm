@@ -303,6 +303,9 @@
 	    <property name="forwardMailVisible" type="true_false" not-null="true">
 	      <column name="PRF_MN_FI_FORWARD_MAIL_VIS" default="'T'"/>
 	    </property>
+	    <property name="writeMailVisible" type="true_false" not-null="true">
+	      <column name="PRF_MN_FI_WRITE_MAIL_VIS" default="'T'"/>
+	    </property>
       </component>
 
       <!-- MENU EDIT -->
@@ -470,6 +473,9 @@
 	  </property>
 	  <property name="addDocumentVisible" type="true_false" not-null="true">
 	    <column name="PRF_TB_ADD_DOC_VIS" default="'T'"/>
+	  </property>
+	  <property name="writeMailVisible" type="true_false" not-null="true">
+	    <column name="PRF_TB_WRITE_MAIL_VIS" default="'T'"/>
 	  </property>
 	  <property name="checkoutVisible" type="true_false" not-null="true">
 	    <column name="PRF_TB_COUT_VIS" default="'T'"/>

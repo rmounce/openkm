@@ -66,14 +66,18 @@ public class GWTWorkspace implements IsSerializable {
 	private long keepAliveSchedule;
 	private long dashboardSchedule;
 	private long uINotificationSchedule;
-	private String tinymceTheme = "";
-	private String tinymcePlugins = "";
-	private String tinymceSkin = "";
-	private String tinymceSkinVariant = "";
-	private String tinimceThemeButtons1 = "";
-	private String tinimceThemeButtons2 = "";
-	private String tinimceThemeButtons3 = "";
-	private String tinimceThemeButtons4 = "";
+    private String tinymceTheme = "";
+    private String tinymcePlugins = "";
+    private String tinymceSkin = "";
+    private String tinymceSkinVariant = "";
+    private String tinymceThemeButtons1 = "";
+    private String tinymceThemeButtons2 = "";
+    private String tinymceThemeButtons3 = "";
+    private String tinymceThemeButtons4 = "";
+    private String tinymce4Theme = "";
+    private String tinymce4Plugins = "";
+    private String tinymce4Toolbar1 = "";
+    private String tinymce4Toolbar2 = "";
 	private String htmlSyntaxHighlighterCore = "";
 	private String htmlSyntaxHighlighterTheme = "";
 	private String extraTabWorkspaceLabel = "";
@@ -920,38 +924,70 @@ public class GWTWorkspace implements IsSerializable {
 		this.tinymceSkinVariant = tinymceSkinVariant;
 	}
 
-	public String getTinimceThemeButtons1() {
-		return tinimceThemeButtons1;
-	}
+    public String getTinymceThemeButtons1() {
+        return tinymceThemeButtons1;
+    }
 
-	public void setTinimceThemeButtons1(String tinimceThemeButtons1) {
-		this.tinimceThemeButtons1 = tinimceThemeButtons1;
-	}
+    public void setTinymceThemeButtons1(String tinymceThemeButtons1) {
+        this.tinymceThemeButtons1 = tinymceThemeButtons1;
+    }
 
-	public String getTinimceThemeButtons2() {
-		return tinimceThemeButtons2;
-	}
+    public String getTinymceThemeButtons2() {
+        return tinymceThemeButtons2;
+    }
 
-	public void setTinimceThemeButtons2(String tinimceThemeButtons2) {
-		this.tinimceThemeButtons2 = tinimceThemeButtons2;
-	}
+    public void setTinymceThemeButtons2(String tinymceThemeButtons2) {
+        this.tinymceThemeButtons2 = tinymceThemeButtons2;
+    }
 
-	public String getTinimceThemeButtons3() {
-		return tinimceThemeButtons3;
-	}
+    public String getTinymceThemeButtons3() {
+        return tinymceThemeButtons3;
+    }
 
-	public void setTinimceThemeButtons3(String tinimceThemeButtons3) {
-		this.tinimceThemeButtons3 = tinimceThemeButtons3;
-	}
+    public void setTinymceThemeButtons3(String tinymceThemeButtons3) {
+        this.tinymceThemeButtons3 = tinymceThemeButtons3;
+    }
 
-	public String getTinimceThemeButtons4() {
-		return tinimceThemeButtons4;
-	}
+    public String getTinymceThemeButtons4() {
+        return tinymceThemeButtons4;
+    }
 
-	public void setTinimceThemeButtons4(String tinimceThemeButtons4) {
-		this.tinimceThemeButtons4 = tinimceThemeButtons4;
-	}
+    public void setTinymceThemeButtons4(String tinymceThemeButtons4) {
+        this.tinymceThemeButtons4 = tinymceThemeButtons4;
+    }
 
+	public String getTinymce4Theme() {
+        return tinymce4Theme;
+    }
+
+    public void setTinymce4Theme(String tinymce4Theme) {
+        this.tinymce4Theme = tinymce4Theme;
+    }
+
+    public String getTinymce4Plugins() {
+        return tinymce4Plugins;
+    }
+
+    public void setTinymce4Plugins(String tinymce4Plugins) {
+        this.tinymce4Plugins = tinymce4Plugins;
+    }
+
+    public String getTinymce4Toolbar1() {
+        return tinymce4Toolbar1;
+    }
+
+    public void setTinymce4Toolbar1(String tinymce4Toolbar1) {
+        this.tinymce4Toolbar1 = tinymce4Toolbar1;
+    }
+
+    public String getTinymce4Toolbar2() {
+        return tinymce4Toolbar2;
+    }
+
+    public void setTinymce4Toolbar2(String tinymce4Toolbar2) {
+        this.tinymce4Toolbar2 = tinymce4Toolbar2;
+    }
+    
 	public String getHtmlSyntaxHighlighterCore() {
 		return htmlSyntaxHighlighterCore;
 	}
