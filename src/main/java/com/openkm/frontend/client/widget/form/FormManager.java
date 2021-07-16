@@ -81,7 +81,7 @@ public class FormManager {
 	private Map<String, Object> workflowVarMap = new HashMap<String, Object>();
 	private FormManager singleton;
 	private ValidatorToFire validatorToFire;
-	
+
 	/**
 	 * FormManager used in workflow mode
 	 */
@@ -543,7 +543,7 @@ public class FormManager {
 			textBox.setWidth(gwtFormElement.getWidth());
 			textBox.setStyleName("okm-Input");
 			textBox.setReadOnly(true);
-			textBox.setEnabled((!readOnly && !suggestBox.isReadonly()) || isSearchView); // read only 
+			textBox.setEnabled((!readOnly && !suggestBox.isReadonly()) || isSearchView); // read only
 			final HTML hiddenKey = new HTML("");
 			hiddenKey.setVisible(false);
 
@@ -590,13 +590,13 @@ public class FormManager {
 				textBox.setValue(suggestBox.getText());
 				value.setHTML(suggestBox.getText());
 				hiddenKey.setHTML(suggestBox.getValue());
-				
+
 				/*List<String> tables = new ArrayList<String>();
-				
+
 				if (suggestBox.getTable() != null) {
 					tables.add(suggestBox.getTable());
 				}
-				
+
 				String formatedQuery = MessageFormat.format(suggestBox.getValueQuery(), suggestBox.getValue());
 				keyValueService.getKeyValues(tables, formatedQuery, new AsyncCallback<List<GWTKeyValue>>() {
 					@Override
@@ -608,7 +608,7 @@ public class FormManager {
 							hiddenKey.setHTML(keyValue.getKey());
 						}
 					}
-					
+
 					@Override
 					public void onFailure(Throwable caught) {
 						Main.get().showError("getKeyValues", caught);
@@ -1064,7 +1064,9 @@ public class FormManager {
 			HTML title = new HTML("&nbsp;" + ((GWTSeparator) gwtFormElement).getLabel() + "&nbsp;");
 			title.setStyleName("okm-NoWrap");
 			hPanel.add(horizontalLine);
-			hPanel.add(title);
+			if (!((GWTSeparator) gwtFormElement).getLabel().isEmpty()) {
+				hPanel.add(title);
+			}
 			hPanel.add(horizontalLine2);
 			hPanel.setCellVerticalAlignment(horizontalLine, HasAlignment.ALIGN_MIDDLE);
 			hPanel.setCellVerticalAlignment(horizontalLine2, HasAlignment.ALIGN_MIDDLE);
@@ -1288,7 +1290,7 @@ public class FormManager {
 		}
 		int row = table.getRowCount();
 		isSearchView = true;
-		setFormElements(Arrays.asList(gwtFormElement)); // Initilizing form element list ( needed by edit 
+		setFormElements(Arrays.asList(gwtFormElement)); // Initilizing form element list ( needed by edit
 		drawFormElement(row, gwtFormElement, false, isSearchView);
 		drawed = true;
 		edit();
